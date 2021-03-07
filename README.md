@@ -24,7 +24,7 @@ Output can be read by:
 1) clone project
 2) when open the project with IDE, usually it will prompt to install the dependencies in requirements.txt
 Alternatively use pip to install the dependencies.
-3) run ```Main.py```, or in terminal run ```pytest test.py```
+3) In IDE like PyCharm, right click on class name to run ```main.py```. In terminal, run ```python3 Main.py```, or run ```pytest test.py```
 
 A test case is created to test when the log in time is at the very beginning of the day, 
 or when a user log in one day and log out the following day. 
