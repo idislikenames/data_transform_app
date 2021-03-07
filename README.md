@@ -1,12 +1,12 @@
 ### A data transform Spark application running in local mode
 ### Assumptions: 
 1) AwesomeWorkflow and ReceiptScanner both pushes daily files to the same bucket following naming conventions.
-File names include date keys. i.e.  AwesomeWorkflow_2018-09-15.csv
+File names include date keys that is the same date with ```Date``` field in the data. i.e.  AwesomeWorkflow_2018-09-15.csv
 2) Timestamps in both systems are in UTC. In this example the job run on 2018-09-16, to process the data from the previous date 2018-09-15.
 
 ### High level solution description:
 The data processing workflow is batch processed. 
-Each day using scheduling tools such as Airflow, a S3 sensor would monitor the arrival of these files. S3 event notifications can also be used , with sensor to wait for file arrival notifications from Amazon SQS queue.
+Each day using scheduling tools such as Airflow, a S3 sensor would monitor the arrival of these files for a run date. S3 event notifications can also be used , with a sensor to wait for file arrival notifications from Amazon SQS queue.
 
 Once the files arrive, data transform task would be triggered to aggregate two files and generate a parquet output.
 

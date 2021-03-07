@@ -13,13 +13,13 @@ def read_df(spark, file_aw, file_rs):
         StructField("LoginTime", TimestampType(), True),
         StructField("LogoutTime", TimestampType(), True)
     ])
-    date_key= datetime.strptime("2018-09-16", "%Y-%m-%d") - timedelta(1)
-    date_filter = datetime.strftime(date_key, '%Y-%m-%d')
 
-    df_aw_raw = spark.read.csv(f"input/{file_aw}_{date_filter}.csv", header=True, schema=input_schema)
-    df_rs_raw = spark.read.json(f"input/{file_rs}_{date_filter}.json", schema=input_schema, multiLine=True)
+    date_key_filter = datetime.strftime(datetime.strptime("2018-09-15", "%Y-%m-%d"), '%Y-%m-%d')
 
-    return df_aw_raw, df_rs_raw,date_filter
+    df_aw_raw = spark.read.csv(f"input/{file_aw}_{date_key_filter}.csv", header=True, schema=input_schema)
+    df_rs_raw = spark.read.json(f"input/{file_rs}_{date_key_filter}.json", schema=input_schema, multiLine=True)
+
+    return df_aw_raw, df_rs_raw, date_key_filter
 
 
 def combine_df(df_aw_raw, df_rs_raw, date_filter):
@@ -41,10 +41,10 @@ def combine_df(df_aw_raw, df_rs_raw, date_filter):
     #os.environ["PYSPARK_DRIVER_PYTHON"] = "path_to_local_python/venv/bin/python3.7"
 
     output= df_aw.union(df_rs).drop("UserId","LoginTime","LogoutTime")
-    #show output
+    # show output
     print("output is:")
     output.show()
-    #write using date as partition
+    # write using date as partition
     output_partition = output.drop("Date")
     output_path = f"output/combined_usage.parquet/Date={date_filter}"
     output_partition.write.mode("overwrite").parquet(output_path)
